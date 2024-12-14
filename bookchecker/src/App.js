@@ -1,20 +1,18 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './App.css'; // Optional CSS for styling
+import './App.css';
 
 const App = () => {
-  // State hooks for search input, book data, and loading/error states
   const [searchQuery, setSearchQuery] = useState('');
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Function to handle the search form submission
   const handleSearch = async (e) => {
-    e.preventDefault(); // Prevent form refresh
+    e.preventDefault();
     setLoading(true);
     setError(null);
-    setBooks([]); // Clear previous results
+    setBooks([]);
 
     try {
       const response = await axios.get('https://openlibrary.org/search.json', {
@@ -28,6 +26,7 @@ const App = () => {
       }
     } catch (error) {
       setError('An error occurred while fetching data.');
+      
     } finally {
       setLoading(false);
     }
@@ -35,9 +34,8 @@ const App = () => {
 
   return (
     <div className="App">
-      <h1>📚 Book Checker</h1>
+      <h1>Book Checker</h1>
 
-      {/* Search Form */}
       <form onSubmit={handleSearch}>
         <input 
           type="text" 
@@ -52,15 +50,28 @@ const App = () => {
       {loading && <p>Loading books...</p>}
       {error && <p className="error">{error}</p>}
 
-      {/* Display Book Results */}
       <div className="book-list">
-        {books.length > 0 && books.map((book, index) => (
-          <div className="book-card" key={index}>
-            <h3>{book.title}</h3>
-            <p><strong>Author:</strong> {book.author_name ? book.author_name.join(', ') : 'Unknown'}</p>
-            <p><strong>First Published:</strong> {book.first_publish_year || 'Unknown'}</p>
-          </div>
-        ))}
+        {books.length > 0 && books.map((book, index) => {
+          // Check for an ISBN (if available) or fallback to an OLID for the cover
+          const coverId = book.isbn ? book.isbn[0] : book.cover_edition_key;
+          const coverUrl = coverId 
+          
+            ? `https://covers.openlibrary.org/b/olid/${coverId}-M.jpg`
+            : 'https://via.placeholder.com/150x200?text=No+Cover';
+
+          return (
+            <div className="book-card" key={index}>
+              <img 
+                src={coverUrl} 
+                alt={`${book.title} cover`} 
+                className="book-cover"
+              />
+              <h3>{book.title}</h3>
+              <p><strong>Author:</strong> {book.author_name ? book.author_name.join(', ') : 'Unknown'}</p>
+              <p><strong>First Published:</strong> {book.first_publish_year || 'Unknown'}</p>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
