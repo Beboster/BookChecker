@@ -26,7 +26,6 @@ const App = () => {
       }
     } catch (error) {
       setError('An error occurred while fetching data.');
-      
     } finally {
       setLoading(false);
     }
@@ -52,12 +51,13 @@ const App = () => {
 
       <div className="book-list">
         {books.length > 0 && books.map((book, index) => {
-          // Check for an ISBN (if available) or fallback to an OLID for the cover
+          // Prioritize the use of ISBN, then cover_edition_key, as a fallback
           const coverId = book.isbn ? book.isbn[0] : book.cover_edition_key;
-          const coverUrl = coverId 
-          
-            ? `https://covers.openlibrary.org/b/olid/${coverId}-M.jpg`
-            : 'https://via.placeholder.com/150x200?text=No+Cover';
+          const coverUrl = book.isbn 
+            ? `https://covers.openlibrary.org/b/isbn/${book.isbn[0]}-M.jpg`
+            : coverId 
+              ? `https://covers.openlibrary.org/b/olid/${coverId}-M.jpg`
+              : 'https://via.placeholder.com/150x200?text=No+Cover';
 
           return (
             <div className="book-card" key={index}>
