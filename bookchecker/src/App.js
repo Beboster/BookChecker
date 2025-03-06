@@ -7,6 +7,7 @@ const App = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [bookPrices, setBookPrices] = useState({});
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -31,6 +32,31 @@ const App = () => {
     }
   };
 
+  const fetchBookPrice = async (isbn) => {
+    try {
+      const response = await axios.get('https://api.amazon.com/product', {
+        params: {
+          isbn: isbn,
+          apiKey: 'YOUR_API_KEY', // Replace with your API key
+        },
+      });
+  
+      if (response.status === 200) {
+        return response.data.price; // Assuming the price is returned in the 'price' field
+      }
+    } catch (error) {
+      console.error('Error fetching price from Amazon:', error);
+      return 'Price not available';
+    }
+  };
+
+  const handleMouseEnter = (isbn) => {
+    // Fetch price data when hovering over a book
+    if (!bookPrices[isbn]) {
+      fetchBookPrice(isbn);
+    }
+  };
+
   return (
     <div className="App">
       <h1>Book Checker</h1>
@@ -51,7 +77,6 @@ const App = () => {
 
       <div className="book-list">
         {books.length > 0 && books.map((book, index) => {
-          // Prioritize the use of ISBN, then cover_edition_key, as a fallback
           const coverId = book.isbn ? book.isbn[0] : book.cover_edition_key;
           const coverUrl = book.isbn 
             ? `https://covers.openlibrary.org/b/isbn/${book.isbn[0]}-M.jpg`
@@ -60,7 +85,11 @@ const App = () => {
               : 'https://via.placeholder.com/150x200?text=No+Cover';
 
           return (
-            <div className="book-card" key={index}>
+            <div 
+              className="book-card" 
+              key={index}
+              onMouseEnter={() => handleMouseEnter(book.isbn ? book.isbn[0] : book.cover_edition_key)}
+            >
               <img 
                 src={coverUrl} 
                 alt={`${book.title} cover`} 
@@ -69,6 +98,9 @@ const App = () => {
               <h3>{book.title}</h3>
               <p><strong>Author:</strong> {book.author_name ? book.author_name.join(', ') : 'Unknown'}</p>
               <p><strong>First Published:</strong> {book.first_publish_year || 'Unknown'}</p>
+              {bookPrices[book.isbn ? book.isbn[0] : book.cover_edition_key] && (
+                <p><strong>Price:</strong> ${bookPrices[book.isbn ? book.isbn[0] : book.cover_edition_key]}</p>
+              )}
             </div>
           );
         })}
