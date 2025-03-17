@@ -8,11 +8,7 @@ const App = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-<<<<<<< HEAD
-  const [bookPrices, setBookPrices] = useState({}); // Stores book prices by ISBN
-=======
   const [bookPrices, setBookPrices] = useState({});
->>>>>>> 53e6976e4d6d47f36ef5d0c09ef00b7dac41aba4
 
   // Fetch price for a single book using its ISBN
   const fetchGoogleBookPrice = async (isbn) => {
@@ -72,9 +68,6 @@ const App = () => {
       setLoading(false);
     }
   };
-<<<<<<< HEAD
-  
-=======
 
   const fetchBookPrice = async (isbn) => {
     try {
@@ -101,7 +94,6 @@ const App = () => {
     }
   };
 
->>>>>>> 53e6976e4d6d47f36ef5d0c09ef00b7dac41aba4
   return (
     <div className="App">
       <h1>Book Checker</h1>
@@ -147,14 +139,9 @@ const App = () => {
               <h3>{book.title}</h3>
               <p><strong>Author:</strong> {book.author_name ? book.author_name.join(', ') : 'Unknown'}</p>
               <p><strong>First Published:</strong> {book.first_publish_year || 'Unknown'}</p>
-<<<<<<< HEAD
-              <p><strong>Price:</strong> {bookPrice}</p>
-              {buyLink !== '#' && <a href={buyLink} target="_blank" rel="noopener noreferrer">Buy this book</a>}
-=======
               {bookPrices[book.isbn ? book.isbn[0] : book.cover_edition_key] && (
                 <p><strong>Price:</strong> ${bookPrices[book.isbn ? book.isbn[0] : book.cover_edition_key]}</p>
               )}
->>>>>>> 53e6976e4d6d47f36ef5d0c09ef00b7dac41aba4
             </div>
           );
         })}
