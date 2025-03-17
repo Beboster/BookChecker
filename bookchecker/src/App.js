@@ -8,7 +8,11 @@ const App = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+<<<<<<< HEAD
   const [bookPrices, setBookPrices] = useState({}); // Stores book prices by ISBN
+=======
+  const [bookPrices, setBookPrices] = useState({});
+>>>>>>> 53e6976e4d6d47f36ef5d0c09ef00b7dac41aba4
 
   // Fetch price for a single book using its ISBN
   const fetchGoogleBookPrice = async (isbn) => {
@@ -68,7 +72,36 @@ const App = () => {
       setLoading(false);
     }
   };
+<<<<<<< HEAD
   
+=======
+
+  const fetchBookPrice = async (isbn) => {
+    try {
+      const response = await axios.get('https://api.amazon.com/product', {
+        params: {
+          isbn: isbn,
+          apiKey: 'YOUR_API_KEY', // Replace with your API key
+        },
+      });
+  
+      if (response.status === 200) {
+        return response.data.price; // Assuming the price is returned in the 'price' field
+      }
+    } catch (error) {
+      console.error('Error fetching price from Amazon:', error);
+      return 'Price not available';
+    }
+  };
+
+  const handleMouseEnter = (isbn) => {
+    // Fetch price data when hovering over a book
+    if (!bookPrices[isbn]) {
+      fetchBookPrice(isbn);
+    }
+  };
+
+>>>>>>> 53e6976e4d6d47f36ef5d0c09ef00b7dac41aba4
   return (
     <div className="App">
       <h1>Book Checker</h1>
@@ -89,7 +122,6 @@ const App = () => {
 
       <div className="book-list">
         {books.length > 0 && books.map((book, index) => {
-          // Prioritize the use of ISBN, then cover_edition_key, as a fallback
           const coverId = book.isbn ? book.isbn[0] : book.cover_edition_key;
           const coverUrl = book.isbn 
             ? `https://covers.openlibrary.org/b/isbn/${book.isbn[0]}-M.jpg`
@@ -102,7 +134,11 @@ const App = () => {
           const buyLink = isbn && bookPrices[isbn] ? bookPrices[isbn].buyLink : '#';
 
           return (
-            <div className="book-card" key={index}>
+            <div 
+              className="book-card" 
+              key={index}
+              onMouseEnter={() => handleMouseEnter(book.isbn ? book.isbn[0] : book.cover_edition_key)}
+            >
               <img 
                 src={coverUrl} 
                 alt={`${book.title} cover`} 
@@ -111,8 +147,14 @@ const App = () => {
               <h3>{book.title}</h3>
               <p><strong>Author:</strong> {book.author_name ? book.author_name.join(', ') : 'Unknown'}</p>
               <p><strong>First Published:</strong> {book.first_publish_year || 'Unknown'}</p>
+<<<<<<< HEAD
               <p><strong>Price:</strong> {bookPrice}</p>
               {buyLink !== '#' && <a href={buyLink} target="_blank" rel="noopener noreferrer">Buy this book</a>}
+=======
+              {bookPrices[book.isbn ? book.isbn[0] : book.cover_edition_key] && (
+                <p><strong>Price:</strong> ${bookPrices[book.isbn ? book.isbn[0] : book.cover_edition_key]}</p>
+              )}
+>>>>>>> 53e6976e4d6d47f36ef5d0c09ef00b7dac41aba4
             </div>
           );
         })}
