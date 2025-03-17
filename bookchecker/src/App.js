@@ -94,9 +94,20 @@ const App = () => {
     }
   };
 
+  function toLibrary() {
+
+   //This is to start a library pretty soon will add button to the blocks
+
+  };
+
   return (
     <div className="App">
       <h1>Book Checker</h1>
+      <img 
+      src=".\public\magic-library.png"
+      alt="Magical Library" 
+      style={{ width: "50%", maxWidth: "600px", display: "block", margin: "auto" }}
+    />
 
       <form onSubmit={handleSearch}>
         <input 
