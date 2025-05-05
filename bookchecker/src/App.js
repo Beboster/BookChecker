@@ -6,6 +6,7 @@ import Navbar from "./Components/navbar"; // Optional
 import About from "./Pages/about";
 import Library from "./Pages/library";
 import Home from "./Pages/home";
+import Login from "./Pages/user"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 
@@ -98,6 +99,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/library" element={<Library />} />
+        <Route path="/user" element={<Login />} />
       </Routes>
     </Router>
   );
